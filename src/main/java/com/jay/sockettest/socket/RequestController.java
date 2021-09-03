@@ -1,6 +1,9 @@
 package com.jay.sockettest.socket;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.converter.StringMessageConverter;
@@ -25,7 +28,8 @@ public class RequestController {
     @ResponseBody
     public boolean socketDataSend() {
         simpMessagingTemplate.setMessageConverter(new StringMessageConverter());
-        simpMessagingTemplate.convertAndSend("/topic", LocalDateTime.now().toString());
+        LocalDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+        simpMessagingTemplate.convertAndSend("/topic", now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
         return true;
     }
 }
