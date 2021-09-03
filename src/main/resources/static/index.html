@@ -10,13 +10,7 @@
 <div>Welcome</div>
 
 <div>
-        <span>
-            <input id="message" />
-        </span>
 
-  <span>
-            <button id="send">Send</button>
-        </span>
 </div>
 
 <div id="content"></div>
@@ -25,30 +19,22 @@
 </html>
 
 <script>
-  document.getElementById("send").addEventListener("click", function () {
-    stompClient.send("/app/chat", {}, JSON.stringify({
-      'message' : $("#message").val(),
-    }));
-  });
 
-  var sock = new SockJS('http://localhost:8080/ws');
-  var stompClient = Stomp.over(sock);
+  let sock = new SockJS('http://localhost:8080/ws');
+  let stompClient = Stomp.over(sock);
 
   stompClient.connect({}, connectCallback);
 
   function connectCallback(frame) {
     console.log(frame);
-    stompClient.subscribe('/user/queue/messages', function(message) {
+    stompClient.subscribe('/topic', function(message) {
+      console.log(message);
       console.log(message.body);
       $("#content").append("<div>" + message.body + "</div>");
     });
   }
 
   function errorCallback() {
-    console.log("errorCallback");
-  }
-
-  function closeEventCallback() {
     console.log("errorCallback");
   }
 
